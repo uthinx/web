@@ -35,7 +35,7 @@ module.exports = function (grunt) {
             },
             production: {
                 options: {
-                    bucket: 'houseofstylist/apps/settings'
+                    bucket: 'uthinx/apps/settings'
                 },
                 files: [
                     { expand: true, cwd: 'dist/app/js', src: ['**'], dest: 'app'}
@@ -48,34 +48,33 @@ module.exports = function (grunt) {
                     namespace: "uthinx.templates"
                 },
                 files: {
-                    "vendor/bower/house/house.templates.js": ["app/templates/*.hbs"]
+                    "vendor/bower/uthinx/thinx.templates.js": ["app/templates/*.hbs"]
                 }
             }
         },
         less: {
-            /*
             development: {
                 options: {
                     paths: ["assets/css"]
                 },
                 files: {
-                    "app/styles/uthinx-bootstrap.css": "vendor/bower/bootstrap/less/bootstrap.uthinx.less"
-                }
-            },
-            production: {
-                options: {
-                    paths: ["assets/css"],
-                    cleancss: true,
-                    modifyVars: {
-                        imgPath: '"http://mycdn.com/path/to/images"',
-                        bgColor: 'red'
-                    }
-                },
-                files: {
-                    "path/to/result.css": "path/to/source.less"
+                    "app/css/uthinx-bootstrap.css": "vendor/bower/bootstrap/less/bootstrap.less"
                 }
             }
-            */
+            /*,
+             production: {
+             options: {
+             paths: ["assets/css"],
+             cleancss: true,
+             modifyVars: {
+             imgPath: '"http://mycdn.com/path/to/images"',
+             bgColor: 'red'
+             }
+             },
+             files: {
+             "path/to/result.css": "path/to/source.less"
+             }
+             }*/
         },
         watch: {
             cordova: {
@@ -181,23 +180,35 @@ module.exports = function (grunt) {
                     }
                 ]
             },
+            app: {
+                files: [
+                    {
+                        dot: true,
+                        src: [
+                            '.tmp',
+                            'app/js/*'
+                        ]
+                    }
+                ]
+            },
             server: '.tmp'
         },
         // Make sure code styles are up to par and there are no obvious mistakes
         // Run your source code through JSHint's defaults.
-        //jshint: ["app/**/*.js"],
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc',
-                reporter: require('jshint-stylish')
-            },
-            all: [
-                'Gruntfile.js',
-                '<%= config.app %>/scripts/{,*/}*.js',
-                '!<%= config.app %>/scripts/vendor/*',
-                'test/spec/{,*/}*.js'
-            ]
-        },
+        jshint: ["app/**/*.js"],
+
+        //jshint: {
+        //    options: {
+        //        jshintrc: '.jshintrc',
+        //        reporter: require('jshint-stylish')
+        //    },
+        //    all: [
+        //        'Gruntfile.js',
+        //        '<%= config.app %>/scripts/{,*/}*.js',
+        //        '!<%= config.app %>/scripts/vendor/*',
+        //        'test/spec/{,*/}*.js'
+        //    ]
+        //},
 
         // Mocha testing framework configuration options
         mocha: {
@@ -343,9 +354,17 @@ module.exports = function (grunt) {
         // concat: {
         //     dist: {}
         // },
-
+        uglify: {
+            my_target: {
+                files: {
+                    'vendor/bower/uthinx/uthinx.min.js': ['vendor/bower/uthinx/thinx.ajax.js', 'vendor/bower/uthinx/uthinx.utils.js','vendor/bower/uthinx/uthinx.events.js', 'vendor/bower/uthinx/uthinx.templates.js'],
+                    'vendor/bower/jquery/jquery.all.min.js' : ["vendor/bower/jquery/jquery.min.js", "vendor/bower/jquery/plugins/jquery.viewport.js", "vendor/bower/nanoscroller/bin/javascripts/jquery.nanoscroller.js"]
+                }
+            }
+        },
         // Copies remaining files to places other tasks can use
         copy: {
+            /*
             auto: {
                 files: [
                     {
@@ -354,11 +373,12 @@ module.exports = function (grunt) {
                         cwd: '<%= uthinx.app %>',
                         dest: '<%= uthinx.dist %>',
                         src: [
-                            '{,*/}*.*'
+                            '{,* /}*.*'
                         ]
                     }
                 ]
             },
+            */
             dist: {
                 files: [
                     {
@@ -369,9 +389,12 @@ module.exports = function (grunt) {
                         src: [
                             '*.{ico,png,txt,xml}',
                             '.htaccess',
-                            'images/{,*/}*.webp',
+                            'img/{,*/}*.webp',
                             '{,*/}*.html',
-                            'styles/fonts/{,*/}*.*'
+                            'res/*',
+                            'js/*',
+                            'css/uthinx.min.css',
+                            'fonts/{,*/}*.*'
                         ]
                     },
                     {
@@ -382,14 +405,16 @@ module.exports = function (grunt) {
                         dest: '<%= config.dist %>'
                     }
                 ]
-            },
+            }
+            /*,
             styles: {
                 expand: true,
                 dot: true,
                 cwd: '<%= config.app %>/styles',
                 dest: '.tmp/styles/',
-                src: '{,*/}*.css'
+                src: '{,* /}*.css'
             }
+            */
         },
         /*
          // Move vendor and app logic during a build.
@@ -428,10 +453,10 @@ module.exports = function (grunt) {
             release: {
                 options: {
                     mainConfigFile: "app/config.js",
-                    generateSourceMaps: true,
+                    generateSourceMaps: false,
                     include: ["main"],
                     insertRequire: ["main"],
-                    out: "dist/source.min.js",
+                    out: "app/js/uthinx.min.js",
                     optimize: "uglify2",
 
                     // Since we bootstrap with nested `require` calls this option allows
@@ -444,7 +469,7 @@ module.exports = function (grunt) {
                     // Setting the base url to the distribution directory allows the
                     // Uglify minification process to correctly map paths for Source
                     // Maps.
-                    baseUrl: "dist/app",
+                    baseUrl: "app",
 
                     // Wrap everything in an IIFE.
                     wrap: true,
@@ -480,7 +505,7 @@ module.exports = function (grunt) {
         cssmin: {
             release: {
                 files: {
-                    "dist/styles.min.css": ["dist/styles.css"]
+                    "app/css/uthinx.min.css": ["app/css/uthinx-bootstrap.css"]
                 }
             }
         },
@@ -709,4 +734,16 @@ module.exports = function (grunt) {
         'test',
         'build'
     ]);
+    // send to aws
+    grunt.registerTask("aws", ["aws_s3"]);
+    //
+    grunt.registerTask("wwwcopy", ["copy"]);
+    //just run the linter on all fiiles
+    grunt.registerTask("hint", ["jshint"]);
+    //make the dis file so can be tested locally in browser
+    grunt.registerTask("require", ["requirejs"]);
+    //less and compress the css
+    grunt.registerTask("cssall", ["less", "cssmin"]);
+    //
+    grunt.registerTask("uthinxjs", ["clean:app","handlebars", "uglify","requirejs"]);
 };

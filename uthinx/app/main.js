@@ -1,17 +1,9 @@
-// Break out the application running from the configuration definition to
-// assist with testing.
-require(["config"], function() {
-    // Kick off the application.
-    require(["app", "router"], function(app, Router) {
-        // Define your master router on the application namespace and trigger all
-        // navigation from this instance.
-        app.router = new Router();
-
-        // Trigger the initial route and enable HTML5 History API support, set the
-        // root folder to '/' by default.  Change in app.js.
-        Backbone.history.start({
-            pushState: true,
-            root: app.root
-        });
-    });
+// JavaScript Document
+/*jslint nomen: true  */
+/*global define: false, window: false, console: false, house: false, locationSetting: false,
+ $$: false, document: false, undefined: false, typeof: false, parseInt: false, undefined: false,
+ null: false, nomen: false, require: false, requirejs: false
+ */
+require(['app'], function(app) {
+    app.initialize();
 });
