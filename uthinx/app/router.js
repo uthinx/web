@@ -1,111 +1,97 @@
 define([
+    'quo',
+    'uthinx',
+    'swiper',
     'jquery',
     'underscore',
     'backbone',
-    'handlebars'
-], function ($, _, Backbone, Handlebars) {
+    'handlebars',
+    'views/mmenuView',
+    'views/createView',
+    'views/searchView',
+    'views/entityView'
+], function (quo, uthinx, Swiper, $, _, Backbone, Handlebars, mmenu, create, search, entity) {
     "use strict";
     var $$ = window.$$ || {},
+        uthinx = window.uthinx || uthinx,
         AppRouter = Backbone.Router.extend({
             routes: {
-                '*actions': 'defaultAction'
+                'entity': '_showEntityPage',
+                'entity/create': '_showCreatePage',
+                'entity/search': '_showSearchPage',
+                'entity/mmenu': '_showMMenuPage',
+                'entity/settings': '_showSettingsPage',
+                '*actions': '_defaultAction'
             },
-            slideLock: false,
-            defaultAction: function (actions) {
+            _defaultAction: function _defaultAction(actions) {
                 var self = this,
-                    start = "We Have init Backbone default router.";
+                    $access = $("#uthinx-access");
+                console.log("_defaultAction");
 
-                self._console(start);
-                self._console("<b>bindEvents</b>");
-                document.addEventListener('deviceready', self._onDeviceReady, false);
+                if (uthinx.utils.checkConnection()) {
+                    uthinx.utils.logDeviceInfo();
+                }
 
+                uthinx.facebook.isLoggedIn(function (login) {
+                    console.log("LOGIN function called!!!!");
+                    if (login) {
+                        $access.hide();
+                        //$("#uthinx-access").hide();
+                        self.navigate("/entity", true);
+
+                    } else {
+                        //check device log now
+                        $access.show();
+                        console.log("NOT LOGGED IN");
+                    }
+                });
             },
-            _onDeviceReady: function _onDeviceReady() {
+            _showAccess: function _showAccess() {
+                console.log("show access buttons and what not");
+            },
+            _showSettings: function _showSettings() {
+                _slideShow();
+            },
+            accessHandler: function accessHandler(e, caller) {
                 var self = this;
-
-                self._console("<br/><b>init() was called<b/>");
-                self._console("<br/>device: <b>" + ( typeof device ) + "<b/>");
-                self._console("<br/>navigator: <b>" + ( typeof navigator ) + "<b/>");
-                self._console("<br/>navigator.geolocation: <b>" + ( typeof navigator.geolocation ) + "<b/>");
-                self._console("<br/>Connection: <b>" + ( typeof Connection ) + "<b/>");
-                self._console("<br/>self.getDeviceInfo: <b>" + ( typeof self._getDeviceInfo ) + "<b/>");
-                self._console("<br/>self.checkConnection: <b>" + ( typeof self._checkConnection ) + "<b/>");
-
-                self._getDeviceInfo();
+                //
+                uthinx.facebook.login(function () {
+                    //$access.removeClass("close");
+                    console.log("LOGIN IN HANDLER");
+                    self._defaultAction();
+                });
             },
-            _receivedEvent: function (id) {
-                this._console("<br/>Received Event: " + id);
+            _showEntityPage: function _showEntityPage() {
+                console.log("showing Entity");
+                entity.render();
+                mmenu.render();
             },
-            _getDeviceInfo: function _getDeviceInfo() {
+            _showSearchPage: function _showSearchPage(e) {
+                console.log("_showSearchPage");
+                search.render();
+            },
+            _showCreatePage: function _showCreatePage(e) {
+                console.log("_showCreatePage");
+                create.render();
+            },
+            _showMMenuPage: function _showMMenuPage(e) {
+                console.log("_showMMenuPage");
+                mmenu.render();
+            },
+            showMobileMenu: function showMobileMenu(e) {
+                console.log("MMenu Show");
                 var self = this,
-                    result;
+                    page = document.getElementById("uthinx-profile");
 
-                self._checkConnection();
-                self._receivedEvent('deviceready');
-                navigator.geolocation.getCurrentPosition(self._onSuccess, self._onError);
+                if (page.classList.contains("show-mmenu")) {
+                    page.classList.remove("show-mmenu");
+                }
+                else {
+                    page.classList.add("show-mmenu");
+                }
 
-                result = 'Device Name: ' + device.name + '<br />' +
-                    'Device Model: ' + device.model + '<br />' +
-                    'Device Cordova: ' + device.cordova + '<br />' +
-                    'Device Platform: ' + device.platform + '<br />' +
-                    'Device UUID: ' + device.uuid + '<br />' +
-                    'Device Version: ' + device.version + '<br />' +
-                    'global.localStorage: <b>' + (typeof global.localStorage) + "</b><br/>";
+                return false;
 
-                self._console(result);
-            },
-            _onSuccess: function _onSuccess(position) {
-                var self = this,
-                    result = 'Latitude: ' + position.coords.latitude + '<br />' +
-                    'Longitude: ' + position.coords.longitude + '<br />' +
-                    'Altitude: ' + position.coords.altitude + '<br />' +
-                    'Accuracy: ' + position.coords.accuracy + '<br />' +
-                    'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '<br />' +
-                    'Heading: ' + position.coords.heading + '<br />' +
-                    'Speed: ' + position.coords.speed + '<br />' +
-                    'Timestamp: ' + position.timestamp + '<br />';
-
-                self._console(result);
-            },
-            _onError: function _onError(error) {
-                var self = this;
-
-                self._console('<br/>code: ' + error.code);
-                self._console('<br/>message: ' + error.message);
-            },
-            _checkConnection: function _checkConnection() {
-                var networkState = navigator.connection.type,
-                    self = this,
-                    states = {};
-
-                states[Connection.UNKNOWN] = 'Unknown connection';
-                states[Connection.ETHERNET] = 'Ethernet connection';
-                states[Connection.WIFI] = 'WiFi connection';
-                states[Connection.CELL_2G] = 'Cell 2G connection';
-                states[Connection.CELL_3G] = 'Cell 3G connection';
-                states[Connection.CELL_4G] = 'Cell 4G connection';
-                states[Connection.CELL] = 'Cell generic connection';
-                states[Connection.NONE] = 'No network connection';
-
-                self._console("states[networkState]:" + states[networkState]);
-            },
-            /**/
-            _console: function (text) {
-                var $console = $("#console"),
-                    val = $console.val() + "<br/>";
-                $console.val(val + text);
-            },
-            showMobileMenu: function (e) {
-                var self = this;
-
-                self._console("showMobileMenu");
-
-                if ($("#hos-ui-is-mobile").is(":visible") === false) return false;
-
-                var self = this,
-                    current = parseInt($("#hos-ui-master-body").css("marginLeft").replace(/px/g, ''), 10),
-                    move = 0,
-                    check = 0;
                 if (e.type === "swipeLeft" && current !== 270) {
                     return;
                 }
@@ -113,16 +99,6 @@ define([
                     return;
                 }
 
-                move = (current > 0) ? "-=" + current : "+=270px";
-                check = (current === 0) ? false : true;
-
-                if (self.slideLock) return false;
-                self._console("Show mmenu!!!!!!!");
-                self.slideLock = true;
-
-                $("#hos-ui-master-body").animate({marginLeft: move}, 300, function () {
-                    self.slideLock = false;
-                });
                 e.preventDefault();
             }
         }),
@@ -130,14 +106,13 @@ define([
             var app_router = new AppRouter(),
                 self = this;
 
-            self._console("Initialized");
-            self._console($(".uthinx-nano"));
             $(".uthinx-nano").nanoScroller();
-            self._console("jQuery ON: " + (typeof $.on));
-            self._console("$.nanoScroller: " + (typeof $.nanoScroller));
-            self._console("$.fn.nanoScroller: " + (typeof $.fn.nanoScroller));
+            //
             $(".uthinx-nano").nanoScroller();
             // Extend the View class to include a navigation method goTo
+            $("#mmenuShowBtn").on("click", function (e) {
+                app_router.showMobileMenu(e);
+            });
             Backbone.View.prototype.routeChanger = function (location) {
                 app_router.navigate(location, true);
             };
@@ -148,6 +123,25 @@ define([
             Backbone.View.prototype.showMobileMenu = function (e, caller) {
                 app_router.showMobileMenu(e, caller);
             };
+            //
+            $("#mmenuShowBtn").on("click", function (e) {
+
+            });
+            //
+            $("#facebookSignin").on("click", function (e) {
+                app_router.accessHandler(e, this);
+                console.log("facebook click");
+            });
+            //
+            $("#anonymousSignin").on("click", function (e) {
+                app_router.accessHandler(e, this);
+                console.log("Anonymous click");
+            });
+            //
+            $('body').on('touchmove', function(e) {
+                console.log("STOPPING body touchmove");
+                e.preventDefault();
+            });
             //
             Backbone.history.start();
             // Trigger the initial route and enable HTML5 History API support, set the
@@ -160,57 +154,3 @@ define([
 
     return { initialize: initialize };
 });
-
-/*
- /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-/*
- var app = {
- // Application Constructor
- initialize: function() {
- this.bindEvents();
- },
- // Bind Event Listeners
- //
- // Bind any events that are required on startup. Common events are:
- // 'load', 'deviceready', 'offline', and 'online'.
- bindEvents: function() {
- document.addEventListener('deviceready', this.onDeviceReady, false);
- },
- // deviceready Event Handler
- //
- // The scope of 'this' is the event. In order to call the 'receivedEvent'
- // function, we must explicity call 'app.receivedEvent(...);'
- onDeviceReady: function() {
- app.receivedEvent('deviceready');
- },
- // Update DOM on a Received Event
- receivedEvent: function(id) {
- var parentElement = document.getElementById(id);
- var listeningElement = parentElement.querySelector('.listening');
- var receivedElement = parentElement.querySelector('.received');
-
- listeningElement.setAttribute('style', 'display:none;');
- receivedElement.setAttribute('style', 'display:block;');
-
- console.log('Received Event: ' + id);
- }
- };
-
- */

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2014 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" type="text/css" href="css/uthinx.min.css"/>
+    <title>uthinx</title>
+</head>
+<body>
+    <article id="uthinx-connection">
+        No Internet Connection
+    </article>
+    <section id="uthinx-access" class="uthinx-page uthinx-access">
+        <!--
+            Below we include the Login Button social plugin. This button uses
+            the JavaScript SDK to present a graphical Login button that triggers
+            the FB.login() function when clicked.
+
+        <fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();"></fb:login-button>
+        -->
+        <div>
+            <button id="facebookSignin" type="button" class="btn btn-primary btn-lg btn-block">FaceBook Login</button>
+            <button id="anonymousSignin" type="button" class="btn btn-default btn-lg btn-block">Anonymous</button>
+        </div>
+    </section>
+    <section id="uthinx-create" class="uthinx-page uthinx-create"></section>
+    <section id="uthinx-search" class="uthinx-page uthinx-search"></section>
+    <section id="uthinx-mmenu" class="uthinx-page uthinx-mmenu"></section>
+    <section id="uthinx-main" class="uthinx-page uthinx-main"></section>
+    <section id="uthinx-profile" class="uthinx-page uthinx-profile"></section>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/start.js"></script>
+</body>
+</html>
+<!-- 
+
+proile-main
+profile-swipe -- higher z index needed
+
+-->

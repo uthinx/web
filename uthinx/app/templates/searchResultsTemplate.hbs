@@ -1,0 +1,12 @@
+{{#if this.results}}
+
+    {{#each this.results}}
+    <li>
+        Result that is something
+    </li>
+    {{/each}}
+{{else}}
+    <li id="uthinx-search-results-msg">
+        Sorry we could not find any {{ this.type }} polls avaliable to you.
+    </li>
+{{/if}}

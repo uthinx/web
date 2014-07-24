@@ -42,7 +42,14 @@
         },
         _receivedEvent = function (id) {
             var events = doc.getElementById("events");
+            var parentElement = document.getElementById(id);
+            var listeningElement = parentElement.querySelector('.listening');
+            var receivedElement = parentElement.querySelector('.received');
+
+            listeningElement.setAttribute('style', 'display:none;');
+            receivedElement.setAttribute('style', 'display:block;');
             events.innerHTML += "<br/>Received Event: " + id;
+            console.log('Received Event: ' + id);
         },
         _getDeviceInfo = function _getDeviceInfo() {
             var element = doc.getElementById("deviceProperties"),

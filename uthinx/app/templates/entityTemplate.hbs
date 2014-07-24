@@ -1,0 +1,87 @@
+{{#each []}}
+<header class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button id="mmenu-btn" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Link Table Nave</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{{ this.entity_name }}</a>
+        </div>
+    </div>
+</header>
+<header id="uthinx-profile-slide-header">
+    <nav id="uthinx-profile-swiper-pagination" class="uthinx-swiper-pagination-top"></nav>
+    <!-- -->
+    <article class="uthinx-slide-header-inner circle-inner-header">
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+        <div class="choice"></div>
+    </article>
+    <article class="uthinx-slide-header-inner entity-inner-header">
+        <div class="entity-profile-img">
+            <div class="profile-bubble"></div>
+            <img src="{{ this.entity_profile_img }}" class="entity-profile-inner"/>
+        </div>
+        <nav class="uthinx-badges">
+            <a href="#" class="uthinx-badge"></a>
+            <a href="#" class="uthinx-badge"></a>
+            <a href="#" class="uthinx-badge"></a>
+            <a href="#" class="uthinx-badge"></a>
+            <a href="#" class="uthinx-badge"></a>
+        </nav>
+        <div class="entity-top-badge"></div>
+    </article>
+    <section id='uthinx-profile-swiper' class="swiper-container">
+        <div class="swiper-wrapper">
+            <!-- -->
+            {{#each this.polls}}
+            <article class="swiper-slide poll-header" data-catagory="{{ this.poll_catagory_id }}">
+                <div class="catagory-title">{{ this.poll_catagory }}</div>
+                <div class="desc-title">{{ this.poll_description }}</div>
+                <div class="status-indicator" data-timestamp="{{ this.poll_timestamp }}">00:00:00</div>
+                <nav class="uthinx-poll-nav">
+                    <a class="invitation-box" href="#">
+                        <div class="count">{{ this.poll_invitations }}</div>
+                        <div class="title">Invitations</div>
+                    </a>
+                    <a class="participants-box" href="#">
+                        <div class="count">{{ this.poll_participants }}</div>
+                        <div class="title">Participants</div>
+                    </a>
+                </nav>
+            </article>
+                {{/each}}
+        </div>
+    </section>
+    <a href="#" class="uthinx-slide-header-profile-alt-page-btn"></a>
+</header>
+<!-- -->
+<section class="profile-page-body">
+    <div class="uthinx-nano"><!-- user for mobile scroll control -->
+        <div class="overthrow uthinx-nano-content">
+            Body
+        </div>
+    </div>
+</section>
+<nav class="profile-footer-nav">
+    <a href="#" id="search-btn" class="find">find</a>
+    <a id="uthinx-question-cube" class="cube">
+        <div class="face one">One</div>
+        <div class ="face two">Two</div>
+        <div class="face three">Three</div>
+        <div class="face four">Four</div>
+        <div class="face five">Five</div>
+        <div class="face six">Six</div>
+    </a>
+    <a href="#" id="create-btn" class="create">+</a>
+</nav>
+{{/each}}

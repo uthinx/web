@@ -13,7 +13,7 @@ module.exports = function (grunt) {
     var aws = grunt.file.readJSON('aws-keys.json'), // Read the file
         config = {
             app: 'app',
-            dist: '../www'
+            dist: '../phonegap/Uthinx/www'
         },
     // Define the configuration for all the tasks
         cordovaConfig = {
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
                     namespace: "uthinx.templates"
                 },
                 files: {
-                    "vendor/bower/uthinx/thinx.templates.js": ["app/templates/*.hbs"]
+                    "vendor/bower/uthinx/uthinx.templates.js": ["app/templates/*.hbs"]
                 }
             }
         },
@@ -187,6 +187,17 @@ module.exports = function (grunt) {
                         src: [
                             '.tmp',
                             'app/js/*'
+                        ]
+                    }
+                ]
+            },
+            css: {
+                files: [
+                    {
+                        dot: true,
+                        src: [
+                            '.tmp',
+                            'app/css/*'
                         ]
                     }
                 ]
@@ -355,9 +366,16 @@ module.exports = function (grunt) {
         //     dist: {}
         // },
         uglify: {
-            my_target: {
+            uthinx: {
                 files: {
-                    'vendor/bower/uthinx/uthinx.min.js': ['vendor/bower/uthinx/thinx.ajax.js', 'vendor/bower/uthinx/uthinx.utils.js','vendor/bower/uthinx/uthinx.events.js', 'vendor/bower/uthinx/uthinx.templates.js'],
+                    'vendor/bower/uthinx/uthinx.min.js': [
+                        'vendor/bower/uthinx/uthinx.ajax.js',
+                        'vendor/bower/uthinx/uthinx.utils.js',
+                        'vendor/bower/uthinx/uthinx.events.js',
+                        'vendor/bower/uthinx/uthinx.facebook.js',
+                        'vendor/bower/uthinx/uthinx.templates.js',
+                        'vendor/bower/uthinx/uthinx.utils.countdown.js'
+                    ],
                     'vendor/bower/jquery/jquery.all.min.js' : ["vendor/bower/jquery/jquery.min.js", "vendor/bower/jquery/plugins/jquery.viewport.js", "vendor/bower/nanoscroller/bin/javascripts/jquery.nanoscroller.js"]
                 }
             }
@@ -387,10 +405,12 @@ module.exports = function (grunt) {
                         cwd: '<%= config.app %>',
                         dest: '<%= config.dist %>',
                         src: [
+                            /*
                             '*.{ico,png,txt,xml}',
                             '.htaccess',
-                            'img/{,*/}*.webp',
-                            '{,*/}*.html',
+                            */
+                            'img/*',
+                            'index.html',
                             'res/*',
                             'js/*',
                             'css/uthinx.min.css',
@@ -505,7 +525,7 @@ module.exports = function (grunt) {
         cssmin: {
             release: {
                 files: {
-                    "app/css/uthinx.min.css": ["app/css/uthinx-bootstrap.css"]
+                    "app/css/uthinx.min.css": ["app/css/uthinx-bootstrap.css","vendor/bower/swiper/dist/idangerous.swiper.css"]
                 }
             }
         },
@@ -743,7 +763,7 @@ module.exports = function (grunt) {
     //make the dis file so can be tested locally in browser
     grunt.registerTask("require", ["requirejs"]);
     //less and compress the css
-    grunt.registerTask("cssall", ["less", "cssmin"]);
+    grunt.registerTask("cssall", ["clean:css", "less", "cssmin"]);
     //
-    grunt.registerTask("uthinxjs", ["clean:app","handlebars", "uglify","requirejs"]);
+    grunt.registerTask("uthinxjs", ["clean:app","handlebars", "uglify:uthinx","requirejs"]);
 };
