@@ -30,7 +30,6 @@ define([
                 "click a.close-btn" : "_closeSearchPage"
             },
             render: function () {
-                console.log("create renderer CALLED");
                 var self = this,
                     params = "",
                     opts = {
@@ -45,7 +44,6 @@ define([
                     };
 
                 $(self.el).addClass("open-page");
-
                 self.collection = new CreateCollection();
                 opts.collection = self.collection;
                 self.collection.fetch(self._getFetch(opts));
@@ -84,7 +82,6 @@ define([
             },
             forceRender: function (opts) {
                 var self = this;
-                console.log(opts);
                 $(opts.el).html(opts.template(opts.collection.toJSON()));
                 self._setCreateSwiper();
                 self._setPageNano();
@@ -120,11 +117,6 @@ define([
             _setPageNano : function _setPageNano () {
                 var self = this,
                     $scroll = $(self.el).find(".uthinx-nano");
-                console.log("self.el: " + (typeof self.el));
-                console.log(self.el);
-                console.log("forceRender->> Create");
-                console.log($scroll);
-                console.log("nanoScroller: " + (typeof $.fn.nanoScroller));
                 $scroll.nanoScroller();
             }
         });

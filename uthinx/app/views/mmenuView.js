@@ -4,10 +4,11 @@
 /*jslint nomen: true  */
 /*global define: false, window: false, console: false, house: false, locationSetting: false,
  $$: false, document: false, undefined: false, typeof: false, parseInt: false, undefined: false,
- null: false, navigator: false, google: false, house: false
+ null: false, navigator: false, google: false, house: false, uthinx : true, uthinx.utils : true
  */
 // JavaScript Document
 define([
+    'uthinx',
     'jquery',
     'charts',
     'swiper',
@@ -15,7 +16,7 @@ define([
     'underscore',
     'handlebars',
     'collections/mmenuCollection'
-], function ($, Charts, Swiper, Backbone, _, Handlebars, MMenuCollection) {
+], function (U, $, Charts, Swiper, Backbone, _, Handlebars, MMenuCollection) {
     "use strict";
     var uthinx = window.uthinx || {},
         templates = window.uthinx.templates || {},
@@ -28,7 +29,6 @@ define([
                 "click #facebook-logout-mmenu": "_facebookLogout"
             },
             render: function () {
-
                 var self = this,
                     opts = {
                         el: self.el,
@@ -36,24 +36,18 @@ define([
                         before: "",
                         complete: "",
                         success: self.successMMenu,
-                        hack: self.forceRender,
                         template: templates["app/templates/mmenuTemplate.hbs"],
                         collection: self.collection
                     };
 
                 self.collection = new MMenuCollection();
                 opts.collection = self.collection;
-
                 self.collection.fetch(self._getFetch(opts));
                 return self;
             },
             _getFetch: function _getFetch(opts) {
                 return {
                     data: opts.params,
-                    url: "/",
-                    add: false,
-                    type: "GET",
-                    postData: true,
                     beforeSend: function () {
                         console.log("uthinx beforeSend");
                         uthinx.ajax.beforeHandler(opts);
@@ -63,31 +57,27 @@ define([
                         uthinx.ajax.completeHandler(data, response, opts);
                     },
                     success: function (data, response) {
-                        console.log("uthinx success");
+                        console.log("uthinx success MMENU");
                         uthinx.ajax.successHandler(data, response, opts);
                     },
                     error: function (data, response) {
-                        console.log("uthinx error");
+                        console.log("uthinx error MMENU");
                         uthinx.ajax.errorHandler(data, response, opts, true);
                     },
                     failure: function (data, response) {
-                        console.log("uthinx failure");
+                        console.log("uthinx failure MMENU");
                         uthinx.ajax.errorHandler(data, response, opts);
                     }
                 };
             },
             successMMenu: function successMMenu(data, response, opts) {
-                var self = this;
-            },
-            forceRender: function (opts) {
 
                 $(opts.el).html(opts.template(opts.collection.toJSON()));
 
                 var self = this,
                     $scroll = $(self.el).find(".uthinx-nano");
 
-                $scroll.nanoScroller();
-
+                if($.fn.nanoScroller() !== undefined){ $scroll.nanoScroller();  }
 
                 var data = [
                     {
@@ -128,7 +118,6 @@ define([
             _facebookLogout : function _facebookLogout(e){
                 var $access = $("#uthinx-access"),
                     page = document.getElementById("uthinx-profile");
-                console.log("_facebookLogout CALLBACK");
 
                 uthinx.facebook.logout(function(){
                     (page.classList.contains("open-mmenu")) ? page.classList.remove("open-mmenu") : page.classList.add("open-mmenu");

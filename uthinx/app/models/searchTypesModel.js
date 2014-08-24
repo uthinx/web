@@ -4,7 +4,7 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
+    'backbone'
 ], function($, _, Backbone){
     "use strict";
     var SearchTypesModel = Backbone.Model.extend({
@@ -17,7 +17,7 @@ define([
         },
         initialize : function () {
             var self = this;
-            self.setEntityImg();
+            console.log("model init svt");
         },
         getModelId : function getModelId() { return this.attributes.idAttribute; },
         getPollTypeTitle : function getPollTypeTitle() { return this.attributes.poll_type_title; },

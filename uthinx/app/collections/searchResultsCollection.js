@@ -3,6 +3,7 @@
  */
 // JavaScript Document
 define([
+    'uthinx',
     'jquery',
     'underscore',
     'backbone',
@@ -10,7 +11,7 @@ define([
     'models/searchResultsModel'
     // Using the Require.js text! plugin, we are loaded raw text
     // which will be used as our views primary template
-], function($, _, Backbone, Handlebars, model){
+], function( u, $, _, Backbone, Handlebars, model ){
     "use strict";
     var SearchResultsCollection = Backbone.Collection.extend({
         url: uthinx.ajax.url + "/polls",

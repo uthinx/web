@@ -6,6 +6,7 @@
  */
 // JavaScript Document
 define([
+    'uthinx',
     'jquery',
     'underscore',
     'backbone',
@@ -13,15 +14,14 @@ define([
     'models/searchTypesModel'
     // Using the Require.js text! plugin, we are loaded raw text
     // which will be used as our views primary template
-], function($, _, Backbone, Handlebars, model){
+], function( u, $, _, Backbone, Handlebars, model ){
     "use strict";
     var SearchTypesCollection = Backbone.Collection.extend({
         url: uthinx.ajax.url + "/polltypes",
         model: model,
         parse: function (data) {
             var self = this;
-            console.log("SearchTypesCollection.parse");
-            console.log("data: " + JSON.stringify(data));
+
             if (data) {
                 self.add(data);
             }

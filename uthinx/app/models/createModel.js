@@ -10,7 +10,9 @@ define([
 ], function($, _, Backbone){
     "use strict";
     var CreateModel = Backbone.Model.extend({
-        defaults: {}
+        defaults: {
+            id : 0
+        }
     });
     //
     return CreateModel;

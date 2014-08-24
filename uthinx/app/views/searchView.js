@@ -22,18 +22,21 @@ define([
         templates = window.uthinx.templates || {},
         SearchView = Backbone.View.extend({
             initialize: function () {
+                this._registerHandleHelpers();
                 _.bindAll(this);
             },
             el: "#uthinx-search",
-            ell: "uthinx-search-main",
-            elll: "uthinx-search-swiper",
+            ell: "#uthinx-search-main-list",
+            elll: "#uthinx-search-swiper-wrapper",
+            swiper: "",
             collectionII: "",
-            scroller: "#uthinx-search .uthinx-nana-scroll",
+            loader : "<li class='uthinx-search-main-loader'>Loading...</li>",
+            scroller: "#uthinx-search .uthinx-nano-scroll",
             events: {
-                "click a.close-btn": "_closeSearchPage"
+                "click a.close-btn": "_closeSearchPage",
+                "touchstart #uthinx-search" : "_touchStartHandler"
             },
             render: function () {
-                console.log("search renderer CALLED");
                 var self = this;
 
                 $(self.el).addClass("open-page");
@@ -41,6 +44,9 @@ define([
                 self._searchShellRender();
                 self._searchTypesRender();
                 return self;
+            },
+            _touchStartHandler : function _touchStartHanlder(e) {
+                console.log("_touchStartHandler((()))");
             },
             _closeSearchPage: function _closeSearchPage(e) {
                 var self = this;
@@ -52,23 +58,28 @@ define([
             _getFetch: function _getFetch(opts) {
                 return {
                     data: opts.params,
-                    url: "/",
+                    url: opts.url,
                     add: false,
-                    type: "GET",
+                    type: opts.type,
                     postData: true,
                     beforeSend: function () {
+                        console.log("searchView before");
                         uthinx.ajax.beforeHandler(opts);
                     },
                     complete: function (data, response) {
+                        console.log("searchView complete");
                         uthinx.ajax.completeHandler(data, response, opts);
                     },
                     success: function (data, response) {
+                        console.log("uthinx success searchView");
                         uthinx.ajax.successHandler(data, response, opts);
                     },
                     error: function (data, response) {
-                        uthinx.ajax.errorHandler(data, response, opts, true);
+                        console.log("error search View");
+                        uthinx.ajax.errorHandler(data, response, opts);
                     },
                     failure: function (data, response) {
+                        console.log("searchView failure");
                         uthinx.ajax.errorHandler(data, response, opts);
                     }
                 };
@@ -76,47 +87,47 @@ define([
             _searchShellRender: function () {
                 var self = this;
                 $(self.el).html(templates["app/templates/searchTemplate.hbs"]);
-                self._setSearchSwiper();
                 self._setPageNano();
             },
             _searchTypesRender: function () {
+
                 var self = this,
                     entity = uthinx.utils.getEntity(),
                     url = uthinx.ajax.url + "polltypes/",
                     params = { entity : (entity.id) ? entity.id : 0 },
                     opts = {
                         url : url,
-                        el: self.ell,
+                        el: self.elll,
                         type: "GET",
                         params: params,
-                        before: "",
-                        complete: function () {  self._searchTypesCompleteCallback(); } ,
-                        success: "",
+                        success: self._searchTypesSuccessCallback,
                         template: templates["app/templates/searchTypesTemplate.hbs"],
-
                         collection: self.collection
                     };
 
                 self.collection = new SearchTypesCollection();
                 opts.collection = self.collection;
                 self.collection.fetch(self._getFetch(opts));
+                return false;
             },
-            _searchTypesCompleteCallback : function () {
+            _searchTypesSuccessCallback : function _searchTypesSuccessCallback(data, response, opts) {
                 var self = this;
-                self._searchResultsRender();
+
+                $(opts.el).html(opts.template(opts.collection.toJSON()));
+                self._setSearchSwiper();
 
             },
-            _searchResultsRender: function (id) {
+            _searchResultsRender: function (catagory) {
                 var self = this,
                     entity = uthinx.utils.getEntity(),
-                    url = uthinx.ajax.url + "polls/" + id,
-                    params = { entity : (entity.id) ? entity.id : 0 },
+                    url = uthinx.ajax.url + "poll/" + entity.id,
+                    params = { entity : (entity.id) ? entity.id : 0, id : catagory },
                     opts = {
                         url : url,
-                        el: self.elll,
+                        el: self.ell,
                         type: "GET",
                         params: params,
-                        before: "",
+                        before: function () { self._setResultsLoader();},
                         complete: "",
                         success: "",
                         collection: self.collectionII,
@@ -125,10 +136,17 @@ define([
 
                 self.collectionII = new SearchResultsCollection();
                 opts.collection = self.collectionII;
-                self.collection.fetch(self._getFetch(opts));
+                self.collectionII.fetch(self._getFetch(opts));
+            },
+            _setResultsLoader : function _setResultsLoader() {
+                var self = this;
+                    $(self.ell).empty();
+                    $(self.ell).html(templates["app/templates/searchResultsLoaderTemplate.hbs"]);
             },
             _setSearchSwiper: function setProfilePage() {
+
                 var self = this,
+                    swiper,
                     params = {
                         loop: true, //Switch to vertical mode
                         speed: 500, //Set animation duration to 500ms
@@ -140,10 +158,11 @@ define([
                         slidesPerViewFit: true,
                         releaseFormElements: true,
                         pagination: "#uthinx-search-swiper-pagination",
-                        onTouchStart: function () {
+                        onTouchStart: function (e) {
                             console.log("onTouchStart");
                         },
                         onSlideChangeEnd: function (e) {
+                            console.log("onSlideChangeEnd");
                             self._onSlideChangeEnd(e);
                         },
                         onSlideChangeStart: function (e) {
@@ -152,8 +171,7 @@ define([
                     };
 
                 self.swiper = new Swiper('#uthinx-search-swiper', params);
-
-                return false;
+                self._setSlideComplete("");
             },
             _setPageNano: function _setPageNano() {
                 var self = this,
@@ -166,11 +184,29 @@ define([
                 self._setSlideComplete(e);
             },
             _setSlideComplete: function _setSlideComplete(e) {
-                var slide = e.getSlide(e.activeIndex),
+
+                var self = this,
+                    slide = self.swiper.activeSlide(),
+                    catagory = $(slide).attr("data-catagory"),
                     cls = uthinx.utils.getSlideCatagoryCls(slide);
-                console.log("onSlideChangeEnd" + cls);
-                console.log(cls);
+
+                self._searchResultsRender(catagory);
                 document.getElementById("uthinx-search-header").className = cls;
+            },
+            _registerHandleHelpers : function _registerHandleHelpers() {
+                var self = this;
+
+                if(Handlebars === undefined) return false;
+
+                Handlebars.registerHelper('searchResultsEmpty', function (options) {
+                    var template = templates["app/templates/searchResultsEmptyTemplate.hbs"],
+                        slide = self.swiper.activeSlide(),
+                        catagory = $(slide).attr("data-catagory");
+
+                    return template({ id : catagory, type : uthinx.utils.getSearchTypeName(catagory) });
+                });
+
+                return true;
             }
         });
     // Our module now returns an instantiated view

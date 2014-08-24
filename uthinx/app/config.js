@@ -13,16 +13,17 @@ require.config({
         // Almond is used to lighten the output filesize.
         "almond" : "../vendor/bower/almond/almond",
         "charts" : "../vendor/bower/chartjs/Chart",
-        "uthinx" : "../vendor/bower/uthinx/uthinx.min",
+        "uthinx" : "../vendor/bower/uthinx/js/uthinx.min",
         "backbone" : "../vendor/bower/backbone/backbone",
         "jquery" : "../vendor/bower/jquery/jquery.all.min",
-        "quo" : "../vendor/bower/QuoJS/components/quojs/quo",
         "livestamp" : '../vendor/bower/livestampjs/livestamp.min',
         "moment" : '../vendor/bower/moment/min/moment-with-langs.min',
         "underscore" : "../vendor/bower/lodash/dist/lodash.underscore",
-        "handlebars": '../vendor/bower/handlebars/handlebars.min',
+        "handlebars": '../vendor/bower/handlebars/handlebars',
         "swiper" : "../vendor/bower/swiper/dist/idangerous.swiper",
-        "bootstrap" : "../vendor/bower/bootstrap/dist/js/bootstrap.min"
+        "bootstrap" : "../vendor/bower/bootstrap/dist/js/bootstrap.min",
+        "overthrow" : "../vendor/bower/overthrow/dist/overthrow",
+        "nano" : "../vendor/bower/nanoscroller/bin/javascripts/jquery.nanoscroller"
     },
 
     shim : {
@@ -38,17 +39,15 @@ require.config({
         },
         "handlebars" : {
             deps : ["jquery", "underscore"],
-            exposts : "Handlebars"
+            exports : "Handlebars"
         },
         "swiper" : {
             deps : ["jquery", "underscore"],
-            exposts : "Swiper"
+            exports : "Swiper"
         },
-        "quo" : ["jquery"],
-        "moment" : ["jquery"],
-        "charts" : {
-            deps : ["jquery"],
-            exports : "Charts"
+        "nano" : {
+            deps : ["jquery", "overthrow"],
+            exports : "nano"
         },
         "bootstrap" : ["jquery"],
         "livestamp" : ["jquery", "moment"]

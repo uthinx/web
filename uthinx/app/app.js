@@ -5,8 +5,9 @@
  null: false, nomen: false, require: false, requirejs: false
  */
 define([
+    'config',
     'router'
-], function ( Router ) {
+], function ( Config , Router ) {
     "use strict";
     var initialize = function () {
         Router.initialize();

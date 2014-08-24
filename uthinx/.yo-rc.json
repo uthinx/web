@@ -1,16 +1,16 @@
 {
-  "generator-bbb": {
-    "name": "y",
-    "testFramework": "jasmine",
-    "moduleStyle": "amd",
-    "indent": {
-      "style": "space",
-      "size": 4
-    },
-    "paths": {
-      "base": ".",
-      "tests": "test",
-      "modules": "app/modules"
-    }
-  }
-}
+   "generator-bbb": {
+     "name": "uthinx",
+     "testFramework": "mocha",
+     "moduleStyle": "amd",
+     "indent": {
+       "style": "space",
+       "size": 4
+     },
+     "paths": {
+       "base": ".",
+       "tests": "test",
+       "modules": "app/modules"
+     }
+   }
+ }

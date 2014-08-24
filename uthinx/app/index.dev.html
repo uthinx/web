@@ -37,40 +37,64 @@
     </style>
 </head>
 <body>
-<div id="container">
-    <!-- -->
-    <section id="uthinx-access" class="uthinx-page uthinx-access">
-        <h3>access page!!!</h3>
-        <br>
-        <a id="facebookSignin" href="#" class="in-btn">FaceBook Login</a>
-        <a id="anonymousSignin" href="#" class="in-btn">Anonymous</a>
-        <!--
-            Below we include the Login Button social plugin. This button uses
-            the JavaScript SDK to present a graphical Login button that triggers
-            the FB.login() function when clicked.
-        -->
-        <fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();"></fb:login-button>
+<article id="uthinx-connection">
+    No Internet Connection
+</article>
+<section id="uthinx-access" class="uthinx-page uthinx-access">
+    <!--
+        Below we include the Login Button social plugin. This button uses
+        the JavaScript SDK to present a graphical Login button that triggers
+        the FB.login() function when clicked.
 
-        <div id="status"></div>
-    </section>
-    <section id="uthinx-create" class="uthinx-page uthinx-create">
-        Create
-    </section>
-    <section id="uthinx-search" class="uthinx-page uthinx-search">
-        Search
-    </section>
-    <section id="uthinx-mmenu" class="uthinx-page uthinx-mmenu">
-        Mobile Menu
-    </section>
-    <section id="uthinx-main" class="uthinx-page uthinx-main">
-        Main
-    </section>
-    <section id="uthinx-profile" class="uthinx-page uthinx-profile">
-        Profile
-    </section>
-</div>
+    <fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();"></fb:login-button>
+    -->
+    <div class="access-btn-holder">
+        <button id="facebookSignin" type="button" class="btn btn-primary btn-lg btn-block">FaceBook Login</button>
+        <button id="anonymousSignin" type="button" class="btn btn-default btn-lg btn-block">Anonymous</button>
+    </div>
+</section>
+<section id="uthinx-create" class="uthinx-page uthinx-create"></section>
+<section id="uthinx-search" class="uthinx-page uthinx-search"></section>
+<section id="uthinx-mmenu" class="uthinx-page uthinx-mmenu"></section>
+<section id="uthinx-main" class="uthinx-page uthinx-main"></section>
+<section id="uthinx-profile" class="uthinx-page uthinx-profile"></section>
 <script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="start.js"></script>
+<script>
+    var facebookConnectPlugin = {
+        api : function (local, params, success, fail) {
+            success({});
+        },
+        login : function (params, callback) {
+            callback();
+        },
+        getLoginStatus : function (callback) {
+            callback({"status" : "connected" });
+        }
+    };
+
+    var device = {
+            name : 'Device Name',
+            cordova : 'Device Cordova',
+            platform : 'Device Platform',
+            uuid : 'Device UUID',
+            version : 'Device Version'
+    };
+
+    var Connection = {
+        "NONE" : "No test connection",
+        "WIFI" : "Fake WiFi connection"
+    };
+
+    var facebookAPI = function () {
+
+    };
+
+    navigator.connection = { type : "wifi"};
+
+
+    var type = (navigator && navigator.connection && navigator.connection.type) ? navigator.connection.type : "none";
+</script>
+<script data-main="main" src="../vendor/bower/requirejs/require.js"></script>
 </body>
 </html>
 <!--

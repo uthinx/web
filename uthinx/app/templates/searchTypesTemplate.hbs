@@ -1,10 +1,6 @@
-{{#if this.results}}
-    {{#each this.results}}
-        <article class="swiper-slide" data-catagory="{{ this.id }}">
-            <h4>{{ this.poll_type_title}}</h4>
-            <div>{{ this.poll_type_description }}</div>
-        </article>
-    {{/each}}
-{{else}}
-    <article class="swiper-slide" data-catagory="0">NONE</article>
-{{/if}}
+{{#each []}}
+    <article class="swiper-slide" data-catagory="{{ this.id }}">
+        <h4>{{ this.poll_type_title}}</h4>
+        <div>{{ this.poll_type_description }}</div>
+    </article>
+{{/each}}

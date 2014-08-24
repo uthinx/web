@@ -42,14 +42,14 @@ define([
 
                 var opts,
                     self = this,
-                    type = uthinx.utils.getEntity(),
+                    user = uthinx.utils.getEntity(),
                     url = uthinx.ajax.url + "entity/";
 
-                type = (type === null) ? {} : type;
+                user = (user === null) ? {} : user;
                 opts = {
                     el: self.el,
                     this : self,
-                    url : (type.id) ? url + type.id : (type.entity_facebook_ID) ?  url + "facebook/" + type.entity_facebook_ID : url + "device/" + type.entity_device_ID,
+                    url : (user.id) ? url + user.id : (user.entity_facebook_ID) ?  url + "facebook/" + user.entity_facebook_ID : url + "device/" + user.entity_device_ID,
                     params: "",
                     hack: self.forceRender,
                     collection: self.collection,
@@ -58,7 +58,8 @@ define([
                     complete: self.completeProfilePage,
                     template: templates["app/templates/entityTemplate.hbs"]
                 };
-
+                console.log(JSON.stringify(user));
+                console.log("URL:" + opts.url);
                 return opts;
             },
             forceRender: function (opts) {
@@ -72,7 +73,6 @@ define([
             },
             _startQuestionCube: function _startQuestionCube() {
                 var self = this;
-                console.log("_startQuestionCube()");
                 uthinx.utils.timer = setTimeout(function () {
                     self._cubeTurn(-1, 0, 0);
                 }, 10000);
@@ -95,11 +95,7 @@ define([
                     self._startQuestionCube();
                 }
             },
-            _getEntity: function _getEntity() {
-                return "name";
-            },
             _getFetch: function _getFetch(opts) {
-                console.log("_getFetch( " + opts.url + " )");
                 return {
                     add: false,
                     type: "GET",
@@ -107,23 +103,18 @@ define([
                     postData: false,
                     data: opts.params,
                     beforeSend: function () {
-                        console.log("view before");
                         uthinx.ajax.beforeHandler(opts);
                     },
                     complete: function (data, response) {
-                        console.log("view complete");
                         uthinx.ajax.completeHandler(data, response, opts);
                     },
                     success: function (data, response) {
-                        console.log("view success");
                         uthinx.ajax.successHandler(data, response, opts);
                     },
                     error: function (data, response) {
-                        console.log("inner error call");
                         uthinx.ajax.errorHandler(data, response, opts, true);
                     },
                     failure: function (data, response) {
-                        console.log("inner failure call");
                         uthinx.ajax.errorHandler(data, response, opts);
                     }
                 };
@@ -140,6 +131,8 @@ define([
             },
             successProfilePage: function successProfilePage(data, response, opts) {
                 var self = this;
+
+                console.log(JSON.stringify(response));
 
                 if(response && response.ok && response.none){
                     console.log("SUCCESS CREATE");
@@ -159,10 +152,10 @@ define([
             _createEntity : function _createEntity(opts){
                 var self = this,
                     entity = new EntityModel();
-                console.log("create attempt");
+
                 opts.type = "POST";
                 opts.url = "http://0.0.0.0:1337/entity/";
-                entity.save(uthinx.utils.getEntity(), entity.getModelCallbacks(opts))
+                entity.save(uthinx.utils.getEntity(), entity.getModelCallbacks(opts));
             },
             _showMMenu: function (e) {
                 console.log("_showMMenu");

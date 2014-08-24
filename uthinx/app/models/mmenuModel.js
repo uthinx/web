@@ -10,7 +10,14 @@ define([
 ], function($, _, Backbone){
     "use strict";
     var MMenuModel = Backbone.Model.extend({
-        defaults: {}
+        defaults: {
+            alerts : [],
+            circles : [],
+            friends : []
+        },
+        initialize : function () {
+            console.log("MMenuModel.initialize");
+        }
     });
     //
     return MMenuModel;

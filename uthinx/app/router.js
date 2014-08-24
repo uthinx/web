@@ -1,5 +1,5 @@
 define([
-    'quo',
+    'nano',
     'uthinx',
     'swiper',
     'jquery',
@@ -10,7 +10,7 @@ define([
     'views/createView',
     'views/searchView',
     'views/entityView'
-], function (quo, uthinx, Swiper, $, _, Backbone, Handlebars, mmenu, create, search, entity) {
+], function (nano, uthinx, Swiper, $, _, Backbone, Handlebars, mmenu, create, search, entity) {
     "use strict";
     var $$ = window.$$ || {},
         uthinx = window.uthinx || uthinx,
@@ -23,26 +23,23 @@ define([
                 'entity/settings': '_showSettingsPage',
                 '*actions': '_defaultAction'
             },
-            _defaultAction: function _defaultAction(actions) {
+            _defaultAction: function _defaultAction() {
                 var self = this,
                     $access = $("#uthinx-access");
-                console.log("_defaultAction");
 
                 if (uthinx.utils.checkConnection()) {
                     uthinx.utils.logDeviceInfo();
                 }
 
                 uthinx.facebook.isLoggedIn(function (login) {
-                    console.log("LOGIN function called!!!!");
+
                     if (login) {
                         $access.hide();
-                        //$("#uthinx-access").hide();
                         self.navigate("/entity", true);
-
                     } else {
                         //check device log now
                         $access.show();
-                        console.log("NOT LOGGED IN");
+
                     }
                 });
             },
@@ -56,30 +53,24 @@ define([
                 var self = this;
                 //
                 uthinx.facebook.login(function () {
-                    //$access.removeClass("close");
-                    console.log("LOGIN IN HANDLER");
                     self._defaultAction();
                 });
             },
             _showEntityPage: function _showEntityPage() {
-                console.log("showing Entity");
                 entity.render();
                 mmenu.render();
             },
-            _showSearchPage: function _showSearchPage(e) {
-                console.log("_showSearchPage");
+            _showSearchPage: function _showSearchPage() {
                 search.render();
             },
-            _showCreatePage: function _showCreatePage(e) {
-                console.log("_showCreatePage");
+            _showCreatePage: function _showCreatePage() {
                 create.render();
             },
-            _showMMenuPage: function _showMMenuPage(e) {
-                console.log("_showMMenuPage");
+            _showMMenuPage: function _showMMenuPage() {
                 mmenu.render();
             },
             showMobileMenu: function showMobileMenu(e) {
-                console.log("MMenu Show");
+
                 var self = this,
                     page = document.getElementById("uthinx-profile");
 
@@ -130,12 +121,10 @@ define([
             //
             $("#facebookSignin").on("click", function (e) {
                 app_router.accessHandler(e, this);
-                console.log("facebook click");
             });
             //
             $("#anonymousSignin").on("click", function (e) {
                 app_router.accessHandler(e, this);
-                console.log("Anonymous click");
             });
             //
             $('body').on('touchmove', function(e) {

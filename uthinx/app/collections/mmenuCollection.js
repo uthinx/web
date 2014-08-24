@@ -3,6 +3,7 @@
  */
 // JavaScript Document
 define([
+    'uthinx',
     'jquery',
     'underscore',
     'backbone',
@@ -10,9 +11,9 @@ define([
     'models/mmenuModel'
     // Using the Require.js text! plugin, we are loaded raw text
     // which will be used as our views primary template
-], function($, _, Backbone, Handlebars, model){
+], function( u, $, _, Backbone, Handlebars, model ){
     var MMenuCollection = Backbone.Collection.extend({
-        //url: "",
+        url: uthinx.ajax.url + "/mmenu",
         model: model
     });
     // Our module now returns an instantiated view

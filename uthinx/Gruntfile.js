@@ -29,16 +29,16 @@ module.exports = function (grunt) {
             options: {
                 accessKeyId: aws.AWSAccessKeyId, // Use the variables
                 secretAccessKey: aws.AWSSecretKey, // You can also use env variables
-                region: 'us-west-2',
+                region: 'us-east-1',
                 uploadConcurrency: 5, // 5 simultaneous uploads
-                downloadConcurrency: 5 // 5 simultaneous downloads
+                downloadConcurrency: 5, // 5 simultaneous downloads,
             },
             production: {
                 options: {
-                    bucket: 'uthinx/apps/settings'
+                    bucket: 'uthinx'
                 },
                 files: [
-                    { expand: true, cwd: 'dist/app/js', src: ['**'], dest: 'app'}
+                    { expand: true, cwd: 'app/js', src: ['**'], dest: 'app'}
                 ]
             }
         },
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
                     namespace: "uthinx.templates"
                 },
                 files: {
-                    "vendor/bower/uthinx/uthinx.templates.js": ["app/templates/*.hbs"]
+                    "vendor/bower/uthinx/js/uthinx.templates.js": ["app/templates/*.hbs"]
                 }
             }
         },
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                     paths: ["assets/css"]
                 },
                 files: {
-                    "app/css/uthinx-bootstrap.css": "vendor/bower/bootstrap/less/bootstrap.less"
+                    "app/css/uthinx.bootstrap.css": "vendor/bower/uthinx/less/uthinx.bootstrap.less"
                 }
             }
             /*,
@@ -206,7 +206,12 @@ module.exports = function (grunt) {
         },
         // Make sure code styles are up to par and there are no obvious mistakes
         // Run your source code through JSHint's defaults.
-        jshint: ["app/**/*.js"],
+        jshint: {
+            options : {
+                reporter: require('jshint-stylish')
+            },
+            src : ["app/**/*.js"]
+        },
 
         //jshint: {
         //    options: {
@@ -220,16 +225,6 @@ module.exports = function (grunt) {
         //        'test/spec/{,*/}*.js'
         //    ]
         //},
-
-        // Mocha testing framework configuration options
-        mocha: {
-            all: {
-                options: {
-                    run: true,
-                    urls: ['http://<%= connect.test.options.hostname %>:<%= connect.test.options.port %>/index.html']
-                }
-            }
-        },
 
         // Add vendor prefixed styles
         autoprefixer: {
@@ -368,13 +363,13 @@ module.exports = function (grunt) {
         uglify: {
             uthinx: {
                 files: {
-                    'vendor/bower/uthinx/uthinx.min.js': [
-                        'vendor/bower/uthinx/uthinx.ajax.js',
-                        'vendor/bower/uthinx/uthinx.utils.js',
-                        'vendor/bower/uthinx/uthinx.events.js',
-                        'vendor/bower/uthinx/uthinx.facebook.js',
-                        'vendor/bower/uthinx/uthinx.templates.js',
-                        'vendor/bower/uthinx/uthinx.utils.countdown.js'
+                    'vendor/bower/uthinx/js/uthinx.min.js': [
+                        'vendor/bower/uthinx/js/uthinx.ajax.js',
+                        'vendor/bower/uthinx/js/uthinx.utils.js',
+                        'vendor/bower/uthinx/js/uthinx.events.js',
+                        'vendor/bower/uthinx/js/uthinx.facebook.js',
+                        'vendor/bower/uthinx/js/uthinx.templates.js',
+                        'vendor/bower/uthinx/js/uthinx.utils.countdown.js'
                     ],
                     'vendor/bower/jquery/jquery.all.min.js' : ["vendor/bower/jquery/jquery.min.js", "vendor/bower/jquery/plugins/jquery.viewport.js", "vendor/bower/nanoscroller/bin/javascripts/jquery.nanoscroller.js"]
                 }
@@ -470,6 +465,10 @@ module.exports = function (grunt) {
         // This task uses James Burke's excellent r.js AMD builder to take all
         // modules and concatenate them into a single file.
         requirejs: {
+            options : {
+                title: 'Requirejs Task Complete',  // optional
+                message: 'requirejs finished running' //required,
+            },
             release: {
                 options: {
                     mainConfigFile: "app/config.js",
@@ -525,7 +524,7 @@ module.exports = function (grunt) {
         cssmin: {
             release: {
                 files: {
-                    "app/css/uthinx.min.css": ["app/css/uthinx-bootstrap.css","vendor/bower/swiper/dist/idangerous.swiper.css"]
+                    "app/css/uthinx.min.css": ["app/css/uthinx.bootstrap.css","vendor/bower/swiper/dist/idangerous.swiper.css"]
                 }
             }
         },
@@ -583,7 +582,7 @@ module.exports = function (grunt) {
                 browsers: ["PhantomJS"],
 
                 // Change this to the framework you want to use.
-                frameworks: ["jasmine"],
+                frameworks: ["mocha"],
 
                 plugins: [
                     "karma-jasmine",
@@ -639,10 +638,77 @@ module.exports = function (grunt) {
                 }
             }
         },
-
         coveralls: {
             options: {
                 coverage_dir: "test/coverage/PhantomJS 1.9.2 (Linux)/"
+            }
+        },
+        notify : {
+            handlebars : {
+                options : {
+                    title: 'Handlebars Task Complete',  // optional
+                    message: 'handlebars pre-compilation finished running' //required,
+                }
+            },
+            jshint: {
+                options : {
+                    title: 'JSHINT Task Complete',  // optional
+                    message: 'jshint finished running' //required,
+                }
+            },
+            karma : {
+                options : {
+                    title: 'Karma Task Complete',  // optional
+                    message: 'karma finished running' //required,
+                }
+            },
+            requirejs: {
+                options : {
+                    title: 'Requirejs Task Complete',  // optional
+                    message: 'requirejs finished running' //required,
+                }
+            },
+            less: {
+                options : {
+                    title: 'LESS Task Complete',  // optional
+                    message: 'less finished running' //required
+                }
+            },
+            uglify: {
+                options : {
+                    title: 'Uglify Task Complete',  // optional
+                    message: 'uglify uthinx finished running' //required,
+                }
+            },
+            copy: {
+                options : {
+                    title: 'Copy Task Complete',  // optional
+                    message: 'copying uthinx app to the phonegap dist finished running' //required,
+                }
+            },
+            mocha: {
+                options : {
+                    title: 'Mocha Test Task Complete',  // optional
+                    message: 'mocha test finished running' //required
+                }
+            },
+            aws_s3: {
+                options: {
+                    title: 'AWS S3 Task Complete',  // optional
+                    message: 's3 transfer finished running' //required
+                }
+            },
+            uthinxjs : {
+                options : {
+                    title : 'UTHINXjs Task Competed',
+                    message : 'clean, handlebars, uglify, requirejs, task have all completed'
+                }
+            },
+            cssall : {
+                options : {
+                    title : "CSSALL Task Complete",
+                    message : "clean:css, less, cssmin , task have all completed"
+                }
             }
         }
     });
@@ -661,6 +727,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-karma-coveralls");
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks('grunt-contrib-handlebars');
+    grunt.loadNpmTasks('grunt-notify');
+
     // start of the cordova Grunt task
     grunt.registerTask('buildweb', [
         'clean:dist',
@@ -755,15 +823,15 @@ module.exports = function (grunt) {
         'build'
     ]);
     // send to aws
-    grunt.registerTask("aws", ["aws_s3"]);
+    grunt.registerTask("aws", ["aws_s3",'notify:aws_s3']);
     //
-    grunt.registerTask("wwwcopy", ["copy"]);
+    grunt.registerTask("wwwcopy", ["copy",'notify:copy']);
     //just run the linter on all fiiles
     grunt.registerTask("hint", ["jshint"]);
     //make the dis file so can be tested locally in browser
-    grunt.registerTask("require", ["requirejs"]);
+    grunt.registerTask("require", ["requirejs","notify:requirejs"]);
     //less and compress the css
-    grunt.registerTask("cssall", ["clean:css", "less", "cssmin"]);
+    grunt.registerTask("cssall", ["clean:css", "less", "cssmin","notify:cssall"]);
     //
-    grunt.registerTask("uthinxjs", ["clean:app","handlebars", "uglify:uthinx","requirejs"]);
+    grunt.registerTask("uthinxjs", ["clean:app","handlebars", "uglify:uthinx","requirejs","notify:uthinxjs"]);
 };

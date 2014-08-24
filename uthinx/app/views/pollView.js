@@ -29,7 +29,7 @@ define([
                 "click a.close-btn" : "_closeSearchPage"
             },
             render: function () {
-                console.log("search renderer CALLED");
+
                 var self = this,
                     params = "",
                     opts = {
@@ -83,7 +83,6 @@ define([
             },
             forceRender: function (opts) {
                 var self = this;
-                console.log(opts);
                 $(opts.el).html(opts.template(opts.collection.toJSON()));
                 self._setSearchSwiper();
                 self._setPageNano();
@@ -119,11 +118,6 @@ define([
             _setPageNano : function _setPageNano () {
                 var self = this,
                     $scroll = $(self.el).find(".uthinx-nano");
-                console.log("self.el: " + (typeof self.el));
-                console.log(self.el);
-                console.log("forceRender->> Search");
-                console.log($scroll);
-                console.log("nanoScroller: " + (typeof $.fn.nanoScroller));
                 $scroll.nanoScroller();
             },
             _onSlideChangeEnd : function __onSlideChangeEnd (e){
@@ -133,8 +127,7 @@ define([
             _setSlideComplete : function _setSlideComplete(e){
                 var slide = e.getSlide( e.activeIndex ),
                     cls = uthinx.utils.getSlideCatagoryCls( slide );
-                console.log("onSlideChangeEnd" + cls);
-                console.log(cls);
+
                 document.getElementById("uthinx-search-header").className = cls;
             }
         });
